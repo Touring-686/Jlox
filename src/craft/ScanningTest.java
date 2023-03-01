@@ -1,4 +1,5 @@
 package craft;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.*;
@@ -51,7 +52,11 @@ public class ScanningTest {
         StringBuffer sb = InputFromFile("inputScanOper");
         String source = sb.toString();
         assert(source != null);
-        System.out.println(sb);
+        Scan scan = new Scan(source);
+        scan.scanTokens();
+        List<Token> tokens = scan.tokenArray();
+        Assert.assertEquals("PLUS",scan.tokenType(tokens.get(0)));
+        scan.printToken();
     }
 
 }
