@@ -1,4 +1,4 @@
-package craft;
+package lox;
 
 public class Main {
     public static void main(String[] args) {

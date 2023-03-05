@@ -1,11 +1,11 @@
-package craft;
+package lox;
 import java.util.ArrayList;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static craft.TokenType.*;
+import static lox.TokenType.*;
 
 public class Scan {
     private final String source;
@@ -91,7 +91,9 @@ public class Scan {
             case '/':
                 if(match('/')){
                     // the sequential contents are comment
-                    while(peek() != '\n' && isEnd())    advance();
+                    while(peek() != '\n' && !isEnd()){
+                        advance();
+                    }
                 } else {
                     addToken(SLASH);
                 }
@@ -106,7 +108,7 @@ public class Scan {
             default:
                 // all the digit in the lox is float
                 if(isDigit(c)){
-
+                    checkNumber();
                 }
                 else if (isAlpha(c)) {
                     checkIdentifier();
@@ -173,7 +175,7 @@ public class Scan {
      */
     private void checkString(){
         // lookahead to check whether hit the right '"'
-        while(peek() == '"' && !isEnd()){
+        while(peek() != '"' && !isEnd()){
             //lox support multi-line strings;
             if(peek() == '\n') line++;
             advance();
@@ -203,11 +205,14 @@ public class Scan {
         /*.132*/
         if(!isDigit(peek()))
             Lox.error(line,"invalid number");
-        while(isDigit(peek()))   advance();
-        if(peek() == '.' && isDigit(peek())){
+        while(isDigit(peek())) {
             advance();
-            while(isDigit(peek()))
+        }
+        if(peek() == '.' && isDigit(peekNext())){
+            advance();
+            while(isDigit(peek())){
                 advance();
+            }
         }
 
         addToken(NUMBER,Double.parseDouble(source.substring(start,current)));
@@ -220,6 +225,9 @@ public class Scan {
      * */
     public String tokenType(Token token){
         return token.type.name();
+    }
+    public Object tokenValue(Token token){
+        return token.literal;
     }
     public List<Token> tokenArray(){
         return this.tokens;

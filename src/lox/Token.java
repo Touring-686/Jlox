@@ -1,4 +1,4 @@
-package craft;
+package lox;
 
 // Single-character tokens.
 public class Token {
